@@ -1,11 +1,14 @@
 
 import mongoose from "mongoose"
+import dotenv from "dotenv";
 
 const connectToDB = async () => {
 
   try{
-    const connectStr = 'mongodb+srv://rentalz_123:rentalz_123@cluster0.9fulv7r.mongodb.net/rentalz-v1?retryWrites=true&w=majority';
 
+    dotenv.config();
+
+    const connectStr = process.env.MONGO_DB_URI;
     const connection = await mongoose.connect(connectStr);
   
     // console.log(`MongoDB Connection -> ${JSON.stringify(connection)}`);  
@@ -16,4 +19,6 @@ const connectToDB = async () => {
   }
 }
 
-connectToDB();
+// connectToDB();
+
+export {connectToDB}

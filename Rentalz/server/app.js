@@ -1,26 +1,20 @@
 
-
-
-import rental_products from "./rental-products.js"
+// import rental_products from "./SampleData/SampleRentalProducts.js"
 import express from "express";
+import dotenv from "dotenv";
+import {connectToDB} from "./utils/DBUtils.js"
+
+import {rentalProductRouter} from "./router/RentalProductRouter.js"
+
+dotenv.config();
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.json("Root endpoint accessed - v2..")
-})
+connectToDB();
 
-app.get("/test", (req, res) => {
-  res.json("Test endpoint accessed")
-})
+app.use(rentalProductRouter)
 
-app.get("/api/rentalproducts", (req, res) => {
-  // return rental_products;
-  res.json(rental_products);
-})
-
-
-const PORT = 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server started and running in port ${PORT}`);
 })
