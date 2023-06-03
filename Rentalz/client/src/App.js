@@ -4,15 +4,22 @@ import {Footer} from "./components/Footer";
 import { Main } from "./components/Main";
 import {Routes, Route} from "react-router-dom"
 import {Home} from "./components/Home";
-import {ProductDetails} from "./components/ProductDetails";
+import {ProductDetailsPage} from "./components/ProductDetailsPage";
+import {ProductsListPage} from "./components/ProductsListPage"
+import {LoginPage} from "./components/LoginPage"
+
+import {CartPage} from "./components/CartPage";
 
 function App() {
   return (
 
     <Routes>
 
-      <Route path='/' element={<Home></Home>}></Route>
-      <Route path='/products/:productId' element={<ProductDetails></ProductDetails>}></Route>
+      <Route path='/' element={<ProductsListPage></ProductsListPage>}></Route>
+      <Route path='/products/' element={<ProductsListPage></ProductsListPage>}></Route>
+      <Route path='/products/:productId' element={<ProductDetailsPage></ProductDetailsPage>}></Route>
+      <Route path='/login' element={<LoginPage></LoginPage>}></Route>
+      <Route path='/cart' element={<CartPage></CartPage>}></Route>
 
     </Routes>
   );

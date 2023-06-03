@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
+import bcrypt from "bcryptjs";
+
 const userSchema = mongoose.Schema({
 
-  name : {
+  name: {
     type: String,
     required: true
   },
@@ -24,12 +26,30 @@ const userSchema = mongoose.Schema({
     default: false
   }
 },
-{ 
-  timestamps : true
-}
+  {
+    timestamps: true
+  }
 
 )
 
+userSchema.methods.verifyPassword = async function (userSuppliedPassword) {
+
+  console.log(this);
+  const hashedPassword = this.password;
+
+
+  // 'welcome1', '#($*$#$#_)$(#)$()#welcome#@#(*(#$'
+
+  const outcome = await bcrypt.compare(userSuppliedPassword, hashedPassword);
+  if (outcome){
+    console.log("Paassword matches..")
+  }else{
+    console.log("No Password match")
+  }
+  return outcome;
+}
+
+
 const User = mongoose.model('User', userSchema);
 
-export {User};
+export { User };

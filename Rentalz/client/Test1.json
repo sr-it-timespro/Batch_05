@@ -1,0 +1,86 @@
+[
+  {
+    "product": {
+      "_id": "64732c09a973cef425f37fc0",
+      "user": "64732c09a973cef425f37fb2",
+      "name": "Tata Nexon XZA Plus Automatic",
+      "image": "/images/tata_nexon_xza_auto-v2.jpg",
+      "description": "The latest Tata Nexon with great security features",
+      "brand": "Tata",
+      "category": "Cars",
+      "price": 4800,
+      "totalQuantity": 1,
+      "availableQuantity": 1,
+      "refundableDeposit": 1440,
+      "deliveryPickupCharges": 500,
+      "rentalPriceConfigurations": [
+        {
+          "configurationName": "DAILY",
+          "rentalValue": 480,
+          "_id": "64732c09a973cef425f37fc1"
+        },
+        {
+          "configurationName": "WEEKLY",
+          "rentalValue": 2400,
+          "_id": "64732c09a973cef425f37fc2"
+        },
+        {
+          "configurationName": "MONTHLY",
+          "rentalValue": 12000,
+          "_id": "64732c09a973cef425f37fc3"
+        }
+      ],
+      "__v": 0,
+      "createdAt": "2023-05-28T10:25:13.625Z",
+      "updatedAt": "2023-05-28T10:25:13.625Z"
+    },
+    "bookingDates": {
+      "startDate": "2023-06-03T11:48:21.970Z",
+      "endDate": "2023-06-24T11:48:21.970Z"
+    },
+    "totalNoOfDays": 21,
+    "quantity": 1
+  },
+  {
+    "product": {
+      "_id": "64732c09a973cef425f37fc4",
+      "user": "64732c09a973cef425f37fb2",
+      "name": "Exquisite Olive Green lehenga with zardosi work",
+      "image": "/images/Lehenga_OliveGreen-v2.jpg",
+      "description": "Zoya brand - Exquisite Olive Green lehenga with zardosi work which makes you a star",
+      "brand": "Zoya",
+      "category": "Lehengas",
+      "price": 5999.99,
+      "totalQuantity": 10,
+      "availableQuantity": 10,
+      "refundableDeposit": 1799.9969999999998,
+      "deliveryPickupCharges": 500,
+      "rentalPriceConfigurations": [
+        {
+          "configurationName": "DAILY",
+          "rentalValue": 599.999,
+          "_id": "64732c09a973cef425f37fc5"
+        },
+        {
+          "configurationName": "WEEKLY",
+          "rentalValue": 2999.995,
+          "_id": "64732c09a973cef425f37fc6"
+        },
+        {
+          "configurationName": "MONTHLY",
+          "rentalValue": 14999.975,
+          "_id": "64732c09a973cef425f37fc7"
+        }
+      ],
+      "__v": 0,
+      "createdAt": "2023-05-28T10:25:13.626Z",
+      "updatedAt": "2023-05-28T10:25:13.626Z"
+    },
+    "bookingDates": {
+      "startDate": "2023-06-02T11:48:34.112Z",
+      "endDate": "2023-06-24T11:48:34.112Z"
+    },
+    "totalNoOfDays": 22,
+    "quantity": "6"
+  }
+]

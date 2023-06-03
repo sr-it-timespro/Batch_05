@@ -1,48 +1,66 @@
+import { useState } from "react";
 
-
-import {useState} from "react";
-
-import { Row, Col, ListGroup, ListGroupItem, Image, Form, Button } from "react-bootstrap"
+import { Row, Col, ListGroup, ListGroupItem, Image, Form, Button, Container } from "react-bootstrap"
 import { Footer } from "./Footer"
 import { Header } from "./Header"
 
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
-import {getRentalProductAvailabilityMessage,
+import {
+  getRentalProductAvailabilityMessage,
   getBookingDatesDiffInDays
 } from "../utils/utils.js"
 
+import {getRentalCartItemDefaultValues, addItem} from "../utils/CartUtils.js"
+import { Message } from "./Message";
+
+import { useNavigate } from "react-router-dom";
+
 const DateRangePicker = require("rsuite/DateRangePicker").default
 
+const ProductDetails = ({ product }) => {
 
-const ProductDetails = () => {
+  const rentalCartItemDefaultValues = getRentalCartItemDefaultValues();
 
-  const {productId} = useParams()
+  const [bookingDates, setBookingDates] = useState([
+    rentalCartItemDefaultValues.bookingDates.startDate,
+    rentalCartItemDefaultValues.bookingDates.endDate
+  ]);
 
-  const [product, setProduct] = useState({});
+  const [totalNoOfDays, setTotalNoOfDays] = useState(
+    rentalCartItemDefaultValues.totalNoOfDays
+  );
 
-  const [bookingDates, setBookingDates] = useState([Date.now(), Date.now()]);
+  const [quantity, setQuantity] = useState(
+    rentalCartItemDefaultValues.quantity
+  );
 
-  useEffect( () => {
+  const [bookingDatesUserSelection, setBookingDatesUserSelection] = useState(false);
+  const [validationError, setValidationError] = useState(null);
 
-    const fetchRentalProductById = async () => {
 
-      let url = `/api/rentalproducts/${productId}`;
-      console.log(`URL is ${url}`);
+  const navigate = useNavigate();
 
-      const response = await axios.get(url);
-      const rentalProduct = response.data;
-  
-      console.log(rentalProduct);  
-  
-      setProduct(rentalProduct);
+  const handleAddToCart = () => {
+
+    if (!bookingDatesUserSelection && totalNoOfDays === 0){
+      setValidationError(true);
+    }else{
+
+      // Add To Storage
+      let bookingDates2 = {
+        startDate : bookingDates[0],
+        endDate : bookingDates[1]
+      }
+
+      // addRentalCartItemToStorage()
+
+      addItem(product, bookingDates2, totalNoOfDays, quantity);
+      navigate("/cart");
     }
-    fetchRentalProductById();
-
-  }, [])
-
+  }
 
   const constructQuantityArray = () => {
 
@@ -57,172 +75,191 @@ const ProductDetails = () => {
   }
 
   return (
-    <div>
 
-    <Header></Header>
+    <>
 
-      <Row>
-        <Col>
+      <Container>
+
+        <Row>
+          <Col>
+            {
+              validationError && (
+                <Message messageType="error" messageContent="Select Booking Dates"></Message>
+              )
+            }
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
             <ListGroup>
               <ListGroupItem>
                 <h3>{product.name}</h3>
               </ListGroupItem>
             </ListGroup>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
 
-      <Row>
-        <Col>
+        <Row>
+          <Col>
             <ListGroup>
               <ListGroupItem>
                 {product.description}
               </ListGroupItem>
             </ListGroup>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
 
 
-      <Row>
-        <Col md={4}>
-          <Image src={product.image} alt={product.name} fluid></Image>
-        </Col>
+        <Row>
+          <Col md={4}>
+            <Image src={product.image} alt={product.name} fluid></Image>
+          </Col>
 
-        <Col md={8}>
+          <Col md={8}>
 
             <Row>
 
-                <ListGroup>
-                    <ListGroupItem>
-                      <Row>
-                        <Col>Status</Col>
-                        <Col>{getRentalProductAvailabilityMessage(product)}</Col>
-                      </Row>
-                    </ListGroupItem>
+              <ListGroup>
+                <ListGroupItem>
+                  <Row>
+                    <Col>Status</Col>
+                    <Col>{getRentalProductAvailabilityMessage(product)}</Col>
+                  </Row>
+                </ListGroupItem>
 
-                    <ListGroupItem>
-                      <Row>
-                        <Col>Booking Dates</Col>
-                        <Col>
+                <ListGroupItem>
+                  <Row>
+                    <Col>Booking Dates</Col>
+                    <Col>
 
-                        <DateRangePicker value={bookingDates} onChange={(data) => {
+                      <DateRangePicker value={bookingDates} onChange={(data) => {
 
-                            const diffInDays = getBookingDatesDiffInDays(data);
-                            console.log('Diff in days ' + diffInDays);
+                        const diffInDays = getBookingDatesDiffInDays(data);
+                        console.log('Diff in days ' + diffInDays);
 
-                            setBookingDates(data);
-                        }}>
+                        setBookingDates(data);
+                        setTotalNoOfDays(diffInDays);
 
-                        </DateRangePicker>
-                        </Col>
-                      </Row>
-                    </ListGroupItem>
+                        setBookingDatesUserSelection(true);
+                      }}>
 
-                    <ListGroupItem>
-                      <Row>
-                        <Col>Total No of Days</Col>
-                        <Col>{getBookingDatesDiffInDays(bookingDates)}</Col>
-                      </Row>
-                    </ListGroupItem>
+                      </DateRangePicker>
+                    </Col>
+                  </Row>
+                </ListGroupItem>
 
-                    <ListGroupItem>
-                      <Row>
-                        <Col>Quantity</Col>
-                        <Col>
-                          <Form.Control 
-                            as='select'
-                            value='1'
-                          >
+                <ListGroupItem>
+                  <Row>
+                    <Col>Total No of Days</Col>
+                    <Col>{getBookingDatesDiffInDays(bookingDates)}</Col>
+                  </Row>
+                </ListGroupItem>
 
-                          {
+                <ListGroupItem>
+                  <Row>
+                    <Col>Quantity</Col>
+                    <Col>
+                      <Form.Control
+                        as='select'
+                        value={quantity}
+                        onChange={(event) => {
+                          setQuantity(event.target.value)
+                        }}
+                      >
 
-                            constructQuantityArray().map( (quantityValue) => {
+                        {
 
-                              return (
-                                <option key={quantityValue} value={quantityValue}>
-                                  {quantityValue}</option>
-                              )
-                            })
-                          }
+                          constructQuantityArray().map((quantityValue) => {
 
-                          </Form.Control>
-                        </Col>
-                      </Row>
-                    </ListGroupItem>
-                </ListGroup>
+                            return (
+                              <option key={quantityValue} value={quantityValue}>
+                                {quantityValue}</option>
+                            )
+                          })
+                        }
+
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroupItem>
+              </ListGroup>
 
 
             </Row>
 
             <Row>
-                  <ListGroup>
-                      
-                      <ListGroupItem>
-                        <Row>
-                          <Col>
-                              Rental Prices
-                          </Col>
-                          <Col>
+              <ListGroup>
 
-      {
-        (product.rentalPriceConfigurations != null) && (
+                <ListGroupItem>
+                  <Row>
+                    <Col>
+                      Rental Prices
+                    </Col>
+                    <Col>
 
-          <ListGroup horizontal>
-            {
-              product.rentalPriceConfigurations.map( (rentalPriceConfiguration) => {
+                      {
+                        (product.rentalPriceConfigurations != null) && (
 
-                let configurationName = rentalPriceConfiguration.configurationName;
+                          <ListGroup horizontal>
+                            {
+                              product.rentalPriceConfigurations.map((rentalPriceConfiguration) => {
 
-                let display = configurationName === "DAILY" ? "/ Day" : (
-                  configurationName === "WEEKLY" ? " / Week" : " / Monthly"
-                )
+                                let configurationName = rentalPriceConfiguration.configurationName;
 
-                let rentalValue = rentalPriceConfiguration.rentalValue;
+                                let display = configurationName === "DAILY" ? "/ Day" : (
+                                  configurationName === "WEEKLY" ? " / Week" : " / Monthly"
+                                )
 
-                // Rs 100 / Day 
-                // Rs 2000 / Week
-                let display2 = "Rs " + rentalValue + display;
+                                let rentalValue = rentalPriceConfiguration.rentalValue;
 
-                return (
-                    <ListGroupItem>{display2}</ListGroupItem>
-                )
-                
-              })
-            }
-        </ListGroup>
-        )
-        }
-                          </Col>
-                        </Row>
-                      </ListGroupItem>
+                                // Rs 100 / Day 
+                                // Rs 2000 / Week
+                                let display2 = "Rs " + rentalValue + display;
 
-                      <ListGroupItem>
-                        <Row>
-                          <Col>Refundable Deposit</Col>
-                          <Col>{product.refundableDeposit}</Col>
-                        </Row>
-                      </ListGroupItem>
+                                return (
+                                  <ListGroupItem key={configurationName}>{display2}</ListGroupItem>
+                                )
 
-                      <ListGroupItem>
-                        <Row>
-                          <Col>Delivery/Pickup Charges</Col>
-                          <Col>{product.deliveryPickupCharges}</Col>
-                        </Row>
-                      </ListGroupItem>
+                              })
+                            }
+                          </ListGroup>
+                        )
+                      }
+                    </Col>
+                  </Row>
+                </ListGroupItem>
 
-                      <ListGroupItem>
-                        <Button className="btn-block" type="button" disabled={product.availableQuantity === 0}>
-                          Add to Cart
-                        </Button>
-                      </ListGroupItem>
-                  </ListGroup>
+                <ListGroupItem>
+                  <Row>
+                    <Col>Refundable Deposit</Col>
+                    <Col>{product.refundableDeposit}</Col>
+                  </Row>
+                </ListGroupItem>
+
+                <ListGroupItem>
+                  <Row>
+                    <Col>Delivery/Pickup Charges</Col>
+                    <Col>{product.deliveryPickupCharges}</Col>
+                  </Row>
+                </ListGroupItem>
+
+                <ListGroupItem>
+                  <Button onClick={handleAddToCart} className="btn-block" type="button" disabled={product.availableQuantity === 0}>
+                    Add to Cart
+                  </Button>
+                </ListGroupItem>
+              </ListGroup>
             </Row>
 
-        </Col>
-      </Row>
+          </Col>
+        </Row>
 
-    <Footer></Footer>
-    </div>
+      </Container>
+
+
+    </>
   )
 }
 
-export {ProductDetails}
+export { ProductDetails }

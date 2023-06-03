@@ -5,14 +5,18 @@ import dotenv from "dotenv";
 import {connectToDB} from "./utils/DBUtils.js"
 
 import {rentalProductRouter} from "./router/RentalProductRouter.js"
+import {userRouter} from "./router/UserRouter.js"
 
 dotenv.config();
 
 const app = express();
 
+app.use(express.json());
+
 connectToDB();
 
 app.use(rentalProductRouter)
+app.use(userRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

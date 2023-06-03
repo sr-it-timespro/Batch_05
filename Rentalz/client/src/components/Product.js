@@ -6,7 +6,7 @@ import {getRentalProductAvailabilityMessage} from "../utils/utils.js";
 const Product = ({product}) => {
 
   return (
-    <product>
+    <div>
 
     <Card style={{ width: '18rem' }}>
 
@@ -31,7 +31,7 @@ const Product = ({product}) => {
       </Card.Body>
     </Card>
 
-    </product>
+    </div>
   )
 }
 
